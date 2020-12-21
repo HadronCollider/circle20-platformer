@@ -1,12 +1,23 @@
 package com.makentoshe.androidgithubcitemplate
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : MyActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        helpButton.setOnClickListener {
+            val intent = Intent(this, HelpActivity::class.java)
+            startActivity(intent)
+        }
+
+        start.setOnClickListener {
+            val intent = Intent(this, CharacterActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
