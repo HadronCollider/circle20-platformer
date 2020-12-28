@@ -13,9 +13,23 @@ class CharacterActivity : MyActivity() {
             finish()
         }
 
-        gameButton.setOnClickListener {
+        warrior.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("class", "warrior1")
             startActivity(intent)
         }
+
+        wizard.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("class", "wizard")
+            startActivity(intent)
+        }
+
+        archer.setOnClickListener {
+            val intent = Intent(this, GameActivity::class.java)
+            intent.putExtra("class", "archer")
+            startActivity(intent)
+        }
+
     }
 }

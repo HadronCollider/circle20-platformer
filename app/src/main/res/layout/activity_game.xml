@@ -4,7 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".GameActivity">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/back"
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/exit"
@@ -16,20 +29,29 @@
 
     <Button
         android:id="@+id/attack"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Attack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/protect"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="0dp" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/protect"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Protect"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/attack"
-        android:layout_width="0dp" />
+        app:layout_constraintStart_toEndOf="@id/attack" />
+
+    <ImageView
+        android:id="@+id/hero"
+        android:layout_width="240dp"
+        android:layout_height="280dp"
+        android:layout_marginStart="60dp"
+        app:layout_constraintBottom_toTopOf="@+id/attack"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:srcCompat="@drawable/ic_launcher_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
