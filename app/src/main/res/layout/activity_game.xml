@@ -49,9 +49,50 @@
         android:id="@+id/hero"
         android:layout_width="240dp"
         android:layout_height="280dp"
-        android:layout_marginStart="60dp"
         app:layout_constraintBottom_toTopOf="@+id/attack"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toEndOf="@+id/exit"
         app:srcCompat="@drawable/ic_launcher_foreground" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintBottom_toTopOf="@+id/protect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/enemy" />
+
+    <ProgressBar
+        android:id="@+id/myHP"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:foregroundTint="#FF0000"
+        app:layout_constraintBottom_toTopOf="@+id/hero"
+        app:layout_constraintEnd_toEndOf="@+id/hero"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/exit" />
+
+    <ProgressBar
+        android:id="@+id/enemyHP"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/myHP"
+        app:layout_constraintEnd_toEndOf="@+id/imageView5"
+        app:layout_constraintStart_toStartOf="@+id/imageView5" />
+
+    <TextView
+        android:id="@+id/sost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kill count: 0"
+        android:textColor="#FFFFFF"
+        android:textSize="38sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
