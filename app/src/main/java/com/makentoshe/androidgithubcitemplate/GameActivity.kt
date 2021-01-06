@@ -67,7 +67,6 @@ class GameActivity : MyActivity() {
                             translationX(0F)
                         }
                     }.withEndAction{
-                        game = true
                         weapon.visibility = INVISIBLE
                         enemy.getDamage(myHero.damage)
                         enemyHP.progress = enemy.getHP()
@@ -76,14 +75,28 @@ class GameActivity : MyActivity() {
                             sost.text = "Kill count: $k"
                             enemy.maxHeal()
                             enemyHP.progress = enemy.getHP()
+                            game = true
                         } else {
-                            myHero.getDamage(enemy.damage)
-                            myHP.progress = myHero.getHP()
-                            if (myHero.getHP() <= 0) {
-                                game = false
-                                sost.text = "You lose \n Kill count: $k"
-                                sost.setTextColor(Color.RED)
-                            }
+                            sliz.animate().apply {
+                                sliz.visibility = VISIBLE
+                                duration = 300
+                                translationX(-750F)
+                            }.withEndAction {
+                                sliz.animate().apply {
+                                    sliz.visibility = INVISIBLE
+                                    duration = 0
+                                    translationX(0F)
+                                }.withEndAction {
+                                    game = true
+                                    myHero.getDamage(enemy.damage)
+                                    myHP.progress = myHero.getHP()
+                                    if (myHero.getHP() <= 0) {
+                                        game = false
+                                        sost.text = "You lose \n Kill count: $k"
+                                        sost.setTextColor(Color.RED)
+                                    }
+                                }
+                            }.start()
                         }
                     }
                 }.start()

@@ -110,4 +110,15 @@
         app:layout_constraintVertical_bias="0.50"
         app:srcCompat="@drawable/ic_sword" />
 
+    <ImageView
+        android:id="@+id/sliz"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:rotation="270"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/hero"
+        app:layout_constraintEnd_toStartOf="@+id/enemy"
+        app:layout_constraintTop_toTopOf="@+id/hero"
+        app:srcCompat="@drawable/ic_sliz" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
