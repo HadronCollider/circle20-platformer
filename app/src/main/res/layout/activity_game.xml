@@ -121,4 +121,15 @@
         app:layout_constraintTop_toTopOf="@+id/hero"
         app:srcCompat="@drawable/ic_sliz" />
 
+    <ImageView
+        android:id="@+id/shield"
+        android:layout_width="105dp"
+        android:layout_height="125dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/hero"
+        app:layout_constraintEnd_toEndOf="@+id/hero"
+        app:layout_constraintStart_toStartOf="@+id/hero"
+        app:layout_constraintTop_toTopOf="@+id/hero"
+        app:srcCompat="@drawable/ic_shield" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

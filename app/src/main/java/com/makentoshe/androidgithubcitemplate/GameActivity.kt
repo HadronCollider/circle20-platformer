@@ -17,17 +17,15 @@ class GameActivity : MyActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        //sword.setVisibility(GONE)
-
-        var k = 0
-
         exit.setOnClickListener {
             finish()
         }
 
-        var myHero:Character
         val myClass = intent.getStringExtra("class")
+        var myHero:Character
         val enemy = Character(100, 1, 10, "enemy")
+        var k = 0
+        var shield_dur = 0
 
         if (myClass == "warrior1") {
             hero.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.warrior1))
@@ -77,27 +75,43 @@ class GameActivity : MyActivity() {
                             enemyHP.progress = enemy.getHP()
                             game = true
                         } else {
-                            sliz.animate().apply {
-                                duration = 500
-                                translationX(0F)
-                            }.withEndAction{
+                            shield.animate().apply {
+                                if(shield_dur > 0) {
+                                    shield.visibility = VISIBLE
+                                    duration = 750
+                                } else duration = 0
+                                rotationYBy(720F)
+                            }.withEndAction {
+                                shield.visibility = INVISIBLE
                                 sliz.animate().apply {
-                                    sliz.visibility = VISIBLE
-                                    duration = 300
-                                    translationX(-750F)
+                                    if(shield_dur > 0)
+                                        duration = 50
+                                    else
+                                        duration = 400
+                                    translationX(0F)
                                 }.withEndAction {
                                     sliz.animate().apply {
-                                        sliz.visibility = INVISIBLE
-                                        duration = 0
-                                        translationX(0F)
+                                        sliz.visibility = VISIBLE
+                                        duration = 300
+                                        translationX(-750F)
                                     }.withEndAction {
-                                        game = true
-                                        myHero.getDamage(enemy.damage)
-                                        myHP.progress = myHero.getHP()
-                                        if (myHero.getHP() <= 0) {
-                                            game = false
-                                            sost.text = "You lose \n Kill count: $k"
-                                            sost.setTextColor(Color.RED)
+                                        sliz.animate().apply {
+                                            sliz.visibility = INVISIBLE
+                                            duration = 0
+                                            translationX(0F)
+                                        }.withEndAction {
+                                            game = true
+                                            if (shield_dur > 0) {
+                                                myHero.getDamage(enemy.damage - 4)
+                                                shield_dur-=1
+                                            } else
+                                                myHero.getDamage(enemy.damage)
+                                            myHP.progress = myHero.getHP()
+                                            if (myHero.getHP() <= 0) {
+                                                game = false
+                                                sost.text = "You lose \n Kill count: $k"
+                                                sost.setTextColor(Color.RED)
+                                            }
                                         }
                                     }
                                 }
@@ -107,5 +121,45 @@ class GameActivity : MyActivity() {
                 }.start()
             }
         }
+
+        protect.setOnClickListener {
+            if(game){
+                game = false
+                shield.animate().apply {
+                    shield.visibility = VISIBLE
+                    duration = 750
+                    rotationYBy(720F)
+                }.withEndAction{
+                    shield.visibility = INVISIBLE
+                    sliz.animate().apply {
+                        duration = 500
+                        translationX(0F)
+                    }.withEndAction{
+                        sliz.animate().apply {
+                            sliz.visibility = VISIBLE
+                            duration = 300
+                            translationX(-750F)
+                        }.withEndAction {
+                            sliz.animate().apply {
+                                sliz.visibility = INVISIBLE
+                                duration = 0
+                                translationX(0F)
+                            }.withEndAction {
+                                game = true
+                                myHero.getDamage(enemy.damage - 4)
+                                shield_dur+=1
+                                myHP.progress = myHero.getHP()
+                                if (myHero.getHP() <= 0) {
+                                    game = false
+                                    sost.text = "You lose \n Kill count: $k"
+                                    sost.setTextColor(Color.RED)
+                                }
+                            }
+                        }
+                    }
+                }.start()
+            }
+        }
     }
 }
+
