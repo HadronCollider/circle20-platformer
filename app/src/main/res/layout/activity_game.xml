@@ -57,7 +57,7 @@
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <ImageView
-        android:id="@+id/enemy"
+        android:id="@+id/enemy_d"
         android:layout_width="240dp"
         android:layout_height="240dp"
         android:layout_marginEnd="24dp"
@@ -84,8 +84,8 @@
         android:layout_height="wrap_content"
         android:background="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/myHP"
-        app:layout_constraintEnd_toEndOf="@+id/enemy"
-        app:layout_constraintStart_toStartOf="@+id/enemy" />
+        app:layout_constraintEnd_toEndOf="@+id/enemy_d"
+        app:layout_constraintStart_toStartOf="@+id/enemy_d" />
 
     <TextView
         android:id="@+id/sost"
@@ -117,7 +117,7 @@
         android:rotation="270"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/hero"
-        app:layout_constraintEnd_toStartOf="@+id/enemy"
+        app:layout_constraintEnd_toStartOf="@+id/enemy_d"
         app:layout_constraintTop_toTopOf="@+id/hero"
         app:srcCompat="@drawable/ic_sliz" />
 

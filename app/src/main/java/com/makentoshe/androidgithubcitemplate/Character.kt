@@ -1,11 +1,15 @@
 package com.makentoshe.androidgithubcitemplate
 
-class Character(maxHP1: Int,def1: Int, damage1: Int, myClass1: String) {
+import android.graphics.drawable.Drawable
+
+class Character(maxHP1: Int, def1: Int, damage1: Int, myClass1: String, hDraw: Drawable?, wDraw: Drawable?) {
     private var maxHP = maxHP1
     private var def = def1
     var damage = damage1
     private var myClass = myClass1
     private var HP = maxHP1
+    var heroDrawable: Drawable? = hDraw
+    var weaponDrawable: Drawable? = wDraw
 
     fun getDamage(damage:Int) {
         HP -= damage-def

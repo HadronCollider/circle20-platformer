@@ -1,18 +1,17 @@
 package com.makentoshe.androidgithubcitemplate
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.view.View.*
-import android.widget.Adapter
-import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_game.*
+import java.util.*
 
 
 class GameActivity : MyActivity() {
     var game = true
+    lateinit var enemies: Array<Character>
+    lateinit var enemy: Character
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -21,25 +20,26 @@ class GameActivity : MyActivity() {
             finish()
         }
 
+        initEnemies()
+
         val myClass = intent.getStringExtra("class")
         var myHero:Character
-        val enemy = Character(100, 1, 10, "enemy")
         var k = 0
         var shield_dur = 0
+        randEnemy()
 
-        if (myClass == "warrior1") {
-            hero.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.warrior1))
-            myHero = Character(300,5,20,myClass)
-        } else if (myClass == "archer"){
-            hero.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.archer))
-            myHero = Character(300,3,25,myClass)
-            weapon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_arrow))
+        if (myClass == "warrior1")
+            myHero = Character(300,5,20,myClass, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
+        else if (myClass == "archer"){
+            myHero = Character(300,3,25,myClass, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
             weapon.rotation = 0F
-        } else{
-            hero.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.wizard))
-            myHero = Character(250,2,30,myClass)
-            weapon.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_magic))
-        }
+        } else
+            myHero = Character(250,2,30,myClass, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
+
+        hero.setImageDrawable(myHero.heroDrawable)
+        weapon.setImageDrawable(myHero.weaponDrawable)
+        enemy_d.setImageDrawable(enemy.heroDrawable)
+        sliz.setImageDrawable(enemy.weaponDrawable)
 
         myHP.max = myHero.getMaxHP()
         myHP.progress = myHero.getHP()
@@ -61,7 +61,7 @@ class GameActivity : MyActivity() {
                             translationX(-50F)
                         }else{
                             weapon.visibility = INVISIBLE
-                            duration = 0
+                            duration = 100
                             translationX(0F)
                         }
                     }.withEndAction{
@@ -71,9 +71,26 @@ class GameActivity : MyActivity() {
                         if (enemy.getHP() <= 0) {
                             k++
                             sost.text = "Kill count: $k"
-                            enemy.maxHeal()
-                            enemyHP.progress = enemy.getHP()
-                            game = true
+                            enemy_d.animate().apply {
+                                duration = 200
+                                scaleX(0F)
+                                scaleY(10F)
+                            }.withEndAction {
+                                enemy_d.visibility = INVISIBLE
+                                enemy_d.animate().apply {
+                                    duration = 200
+                                    scaleX(1F)
+                                    scaleY(1F)
+                                }.withEndAction {
+                                    enemy.maxHeal()
+                                    randEnemy()
+                                    enemy_d.setImageDrawable(enemy.heroDrawable)
+                                    enemy_d.visibility = VISIBLE
+                                    sliz.setImageDrawable(enemy.weaponDrawable)
+                                    enemyHP.progress = enemy.getHP()
+                                    game = true
+                                }
+                            }
                         } else {
                             shield.animate().apply {
                                 if(shield_dur > 0) {
@@ -160,6 +177,18 @@ class GameActivity : MyActivity() {
                 }.start()
             }
         }
+    }
+
+    private fun randEnemy() {
+        val i = (0..(enemies.size-1)).random()
+        enemy = enemies[i]
+    }
+
+    private fun initEnemies() {
+        val enemies0 = Character(100, 1, 10, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
+        val enemies1 = Character(150, 3, 15, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
+
+        enemies = arrayOf(enemies0, enemies1)
     }
 }
 
