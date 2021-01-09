@@ -87,6 +87,7 @@ class GameActivity : MyActivity() {
                                     enemy_d.setImageDrawable(enemy.heroDrawable)
                                     enemy_d.visibility = VISIBLE
                                     sliz.setImageDrawable(enemy.weaponDrawable)
+                                    enemyHP.max = enemy.getMaxHP()
                                     enemyHP.progress = enemy.getHP()
                                     game = true
                                 }
