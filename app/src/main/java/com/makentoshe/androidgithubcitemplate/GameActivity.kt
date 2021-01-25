@@ -35,12 +35,12 @@ class GameActivity : MyActivity() {
         randEnemy()
 
         if (myClass == "warrior1")
-            myHero = Character(300,5,20,myClass, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
+            myHero = Character(300, 100,5,20,myClass, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
         else if (myClass == "archer"){
-            myHero = Character(300,3,25,myClass, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
+            myHero = Character(300, 150,3,25,myClass, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
             weapon.rotation = 0F
         } else
-            myHero = Character(250,2,30,myClass, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
+            myHero = Character(250, 250,2,30,myClass, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
 
         hero.setImageDrawable(myHero.heroDrawable)
         weapon.setImageDrawable(myHero.weaponDrawable)
@@ -51,11 +51,13 @@ class GameActivity : MyActivity() {
         myHP.progress = myHero.getHP()
         enemyHP.max = enemy.getMaxHP()
         enemyHP.progress = enemy.getHP()
+        mana.setText("MP ${myHero.getMP()}")
 
         attack.setOnClickListener {
             if(game) {
                 game = false
-                Log.e("MyError", "here")
+                myHero.regenMP()
+                mana.setText("MP: ${myHero.getMP()}")
                 attackAnim()
             }
         }
@@ -63,8 +65,20 @@ class GameActivity : MyActivity() {
         protect.setOnClickListener {
             if(game){
                 game = false
+                mana.setText("MP: ${myHero.getMP()}")
                 shieldAnim()
             }
+        }
+
+        heal.setOnClickListener {
+            if(myHero.getMP() >= 25)
+                if(game) {
+                    game = false
+                    myHero.heal()
+                    myHP.progress = myHero.getHP()
+                    enemyAttackAnim()
+                    mana.setText("MP: ${myHero.getMP()}")
+                }
         }
     }
 
@@ -75,28 +89,8 @@ class GameActivity : MyActivity() {
             rotationYBy(720F)
         }.withEndAction{
             shield.visibility = INVISIBLE
-            sliz.animate().apply {
-                duration = 500
-                translationX(0F)
-            }.withEndAction{
-                sliz.animate().apply {
-                    sliz.visibility = VISIBLE
-                    duration = 300
-                    translationX(-750F)
-                }.withEndAction {
-                    sliz.animate().apply {
-                        sliz.visibility = INVISIBLE
-                        duration = 0
-                        translationX(0F)
-                    }.withEndAction {
-                        game = true
-                        myHero.getDamage(enemy.damage - 4)
-                        shield_dur+=1
-                        myHP.progress = myHero.getHP()
-                        checkDeath()
-                    }
-                }
-            }
+            shield_dur+=2
+            enemyAttackAnim()
         }.start()
     }
 
@@ -106,8 +100,8 @@ class GameActivity : MyActivity() {
     }
 
     private fun initEnemies() {
-        val enemies0 = Character(100, 1, 10, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
-        val enemies1 = Character(150, 3, 15, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
+        val enemies0 = Character(100, 0, 1, 10, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
+        val enemies1 = Character(150, 0, 3, 15, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
 
         enemies = arrayOf(enemies0, enemies1)
     }
@@ -142,31 +136,35 @@ class GameActivity : MyActivity() {
                         rotationYBy(720F)
                     }.withEndAction {
                         shield.visibility = INVISIBLE
-                        sliz.animate().apply {
-                            if(shield_dur > 0)
-                                duration = 50
-                            else
-                                duration = 400
-                            translationX(0F)
-                        }.withEndAction {
-                            sliz.animate().apply {
-                                sliz.visibility = VISIBLE
-                                duration = 300
-                                translationX(-750F)
-                            }.withEndAction {
-                                sliz.animate().apply {
-                                    sliz.visibility = INVISIBLE
-                                    duration = 0
-                                    translationX(0F)
-                                }.withEndAction {
-                                    game = true
-                                    enemyAttack()
-                                    myHP.progress = myHero.getHP()
-                                    checkDeath()
-                                }
-                            }
-                        }
+                        enemyAttackAnim()
                     }.start()
+                }
+            }
+        }.start()
+    }
+
+    private fun enemyAttackAnim() {
+        sliz.animate().apply {
+            if(shield_dur > 0)
+                duration = 50
+            else
+                duration = 400
+            translationX(0F)
+        }.withEndAction {
+            sliz.animate().apply {
+                sliz.visibility = VISIBLE
+                duration = 300
+                translationX(-750F)
+            }.withEndAction {
+                sliz.animate().apply {
+                    sliz.visibility = INVISIBLE
+                    duration = 0
+                    translationX(0F)
+                }.withEndAction {
+                    game = true
+                    enemyAttack()
+                    myHP.progress = myHero.getHP()
+                    checkDeath()
                 }
             }
         }.start()
