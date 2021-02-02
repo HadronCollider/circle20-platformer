@@ -37,3 +37,43 @@ class Staff(
     dexRequired: Int,
     damage: Int
 ):Weapon(name, weight, strRequired, dexRequired, damage)
+
+open class Armor(
+    name: String,
+    weight: Int,
+    strRequired: Int,
+    dexRequired: Int,
+    val def: Int
+):Item(name, weight, strRequired, dexRequired)
+
+class Chestplate(
+    name: String,
+    weight: Int,
+    strRequired: Int,
+    dexRequired: Int,
+    def: Int
+):Armor(name, weight, strRequired, dexRequired, def)
+
+class Leggings(
+    name: String,
+    weight: Int,
+    strRequired: Int,
+    dexRequired: Int,
+    def: Int
+):Armor(name, weight, strRequired, dexRequired, def)
+
+class Helmet(
+    name: String,
+    weight: Int,
+    strRequired: Int,
+    dexRequired: Int,
+    def: Int
+):Armor(name, weight, strRequired, dexRequired, def)
+
+class Boots(
+    name: String,
+    weight: Int,
+    strRequired: Int,
+    dexRequired: Int,
+    def: Int
+):Armor(name, weight, strRequired, dexRequired, def)

@@ -14,7 +14,7 @@ class GameActivity : MyActivity() {
     var game = true
     lateinit var enemies: Array<Character>
     lateinit var enemy: Character
-    lateinit var myHero:Character
+    lateinit var myHero:Hero
     var k = 0
     var shield_dur = 0
     var flag = false
@@ -35,12 +35,12 @@ class GameActivity : MyActivity() {
         randEnemy()
 
         if (myClass == "warrior1")
-            myHero = Character(300, 100,5,20,myClass, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
+            myHero = Hero(300, 100,5,20, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
         else if (myClass == "archer"){
-            myHero = Character(300, 150,3,25,myClass, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
+            myHero = Hero(300, 150,3,25, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
             weapon.rotation = 0F
         } else
-            myHero = Character(250, 250,2,30,myClass, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
+            myHero = Hero(250, 250,2,30, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
 
         hero.setImageDrawable(myHero.heroDrawable)
         weapon.setImageDrawable(myHero.weaponDrawable)
@@ -100,8 +100,8 @@ class GameActivity : MyActivity() {
     }
 
     private fun initEnemies() {
-        val enemies0 = Character(100, 0, 1, 10, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
-        val enemies1 = Character(150, 0, 3, 15, "enemy", ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
+        val enemies0 = Character(100, 1, 10, ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
+        val enemies1 = Character(150, 3, 15, ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
 
         enemies = arrayOf(enemies0, enemies1)
     }

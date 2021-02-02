@@ -2,16 +2,9 @@ package com.makentoshe.androidgithubcitemplate
 
 import android.graphics.drawable.Drawable
 
-class Character(maxHP1: Int, maxMP1: Int, def1: Int, damage1: Int, myClass1: String, hDraw: Drawable?, wDraw: Drawable?) {
-    private var maxHP = maxHP1
-    private var def = def1
-    var damage = damage1
-    private var myClass = myClass1
-    private var HP = maxHP1
-    private var maxMP = maxMP1
-    private var MP = maxMP1
-    var heroDrawable: Drawable? = hDraw
-    var weaponDrawable: Drawable? = wDraw
+open class Character(internal val maxHP: Int,private val def: Int, val damage: Int,val heroDrawable: Drawable?,val weaponDrawable: Drawable?) {
+
+    internal var HP = maxHP
 
     fun getDamage(damage:Int) {
         HP -= damage-def
@@ -28,6 +21,19 @@ class Character(maxHP1: Int, maxMP1: Int, def1: Int, damage1: Int, myClass1: Str
     fun maxHeal(){
         HP = maxHP
     }
+
+}
+
+class Hero(
+    maxHP: Int,
+    private val maxMP: Int,
+    def: Int,
+    damage: Int,
+    heroDrawable: Drawable?,
+    weaponDrawable: Drawable?):Character(maxHP, def, damage, heroDrawable, weaponDrawable){
+
+    private var MP = maxMP
+    //private val equipItems = List<Item>(5)
 
     fun getMP():Int{
         return MP
