@@ -33,9 +33,9 @@ class Hero(
     weaponDrawable: Drawable?):Character(maxHP, def, damage, heroDrawable, weaponDrawable){
 
     private var MP = maxMP
-    //private val equipItems = List<Item>(5)
+    val inventory = CharacterInventory()
 
-    fun getMP():Int{
+    fun getMP():Int {
         return MP
     }
 

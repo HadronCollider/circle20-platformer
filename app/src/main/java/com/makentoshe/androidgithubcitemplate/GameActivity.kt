@@ -1,12 +1,16 @@
 package com.makentoshe.androidgithubcitemplate
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.View.*
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_game.*
 import java.util.*
+import kotlin.collections.ArrayList
+import com.google.gson.Gson
 
 
 class GameActivity : MyActivity() {
@@ -29,18 +33,64 @@ class GameActivity : MyActivity() {
 
         initEnemies()
 
+        val myClass = intent.getStringExtra("class")
         flag = intent.getBooleanExtra("flag", false)
 
-        val myClass = intent.getStringExtra("class")
         randEnemy()
 
-        if (myClass == "warrior1")
-            myHero = Hero(300, 100,5,20, ContextCompat.getDrawable(this, R.drawable.warrior1), ContextCompat.getDrawable(this, R.drawable.ic_sword))
-        else if (myClass == "archer"){
-            myHero = Hero(300, 150,3,25, ContextCompat.getDrawable(this, R.drawable.archer), ContextCompat.getDrawable(this, R.drawable.ic_arrow))
+        if (myClass == "warrior") {
+            myHero = Hero(
+                300,
+                100,
+                5,
+                20,
+                ContextCompat.getDrawable(this, R.drawable.warrior1),
+                ContextCompat.getDrawable(this, R.drawable.ic_sword)
+            )
+            myHero.inventory.carry(Sword(
+                "Тупой клинок",
+                1,
+                1,
+                1,
+                3,
+                ContextCompat.getDrawable(this, R.drawable.ic_sword))
+            )
+        }else if (myClass == "archer"){
+            myHero = Hero(
+                300,
+                150,
+                3,
+                25,
+                ContextCompat.getDrawable(this, R.drawable.archer),
+                ContextCompat.getDrawable(this, R.drawable.ic_arrow)
+            )
             weapon.rotation = 0F
-        } else
-            myHero = Hero(250, 250,2,30, ContextCompat.getDrawable(this, R.drawable.wizard), ContextCompat.getDrawable(this, R.drawable.ic_magic))
+            myHero.inventory.carry(Bow(
+                "Самодельный лук",
+                1,
+                1,
+                1,
+                3,
+                ContextCompat.getDrawable(this, R.drawable.ic_arrow))
+            )
+        } else {
+            myHero = Hero(
+                250,
+                250,
+                2,
+                30,
+                ContextCompat.getDrawable(this, R.drawable.wizard),
+                ContextCompat.getDrawable(this, R.drawable.ic_magic)
+            )
+            myHero.inventory.carry(Sword(
+                "Старый посох",
+                1,
+                1,
+                1,
+                3,
+                ContextCompat.getDrawable(this, R.drawable.ic_magic))
+            )
+        }
 
         hero.setImageDrawable(myHero.heroDrawable)
         weapon.setImageDrawable(myHero.weaponDrawable)
@@ -79,6 +129,13 @@ class GameActivity : MyActivity() {
                     enemyAttackAnim()
                     mana.setText("MP: ${myHero.getMP()}")
                 }
+        }
+
+        inventory.setOnClickListener {
+            val intent = Intent(this, InventoryActivity::class.java)
+            val str: String = Gson().toJson(myHero.inventory)
+            intent.putExtra("inventory", str)
+            startActivity(intent)
         }
     }
 

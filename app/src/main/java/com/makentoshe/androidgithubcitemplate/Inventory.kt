@@ -24,13 +24,9 @@ class CharacterInventory(): Inventory {
     }
 
     override fun carry(item: Item) {
-
+        if(items.size < capacity)
+            items.add(item)
     }
-
-    fun equip(item: Item) {
-
-    }
-
 }
 
 class ChestInventory(): Inventory {
@@ -45,6 +41,7 @@ class ChestInventory(): Inventory {
     }
 
     override fun carry(item: Item) {
-
+        if(items.size < capacity)
+            items.add(item)
     }
 }

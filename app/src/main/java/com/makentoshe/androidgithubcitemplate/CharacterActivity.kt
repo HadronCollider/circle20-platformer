@@ -15,7 +15,7 @@ class CharacterActivity : MyActivity() {
 
         warrior.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
-            intent.putExtra("class", "warrior1")
+            intent.putExtra("class", "warrior")
             intent.putExtra("flag", true)
             startActivity(intent)
         }

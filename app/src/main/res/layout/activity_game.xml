@@ -84,7 +84,8 @@
         android:layout_height="wrap_content"
         android:background="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/myHP"
-        app:layout_constraintEnd_toEndOf="@+id/enemy_d"
+        app:layout_constraintEnd_toStartOf="@+id/inventory"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/enemy_d" />
 
     <TextView
@@ -95,7 +96,7 @@
         android:textColor="#FFFFFF"
         android:textSize="38sp"
         app:layout_constraintBottom_toTopOf="@+id/enemyHP"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/inventory"
         app:layout_constraintHorizontal_bias="0.93"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
@@ -164,5 +165,13 @@
         app:layout_constraintEnd_toEndOf="@+id/hero"
         app:layout_constraintStart_toEndOf="@+id/heal"
         app:srcCompat="@drawable/superattackicon" />
+
+    <ImageView
+        android:id="@+id/inventory"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_dialog_dialer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
