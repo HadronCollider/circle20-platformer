@@ -1,21 +1,22 @@
 package com.makentoshe.androidgithubcitemplate
 
-import android.graphics.drawable.Drawable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-open class Character(internal val maxHP: Int,private val def: Int, val damage: Int,val heroDrawable: Drawable?,val weaponDrawable: Drawable?) {
+@Entity
+open class Character(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val maxHP: Int,
+    val def: Int,
+    val damage: Int,
+    val heroDrawable: Int,
+    val weaponDrawable: Int) {
 
-    internal var HP = maxHP
+    var HP = maxHP
 
-    fun getDamage(damage:Int) {
+    fun getAttack(damage:Int) {
         HP -= damage-def
-    }
-
-    fun getHP(): Int{
-        return HP
-    }
-
-    fun getMaxHP():Int{
-        return maxHP
     }
 
     fun maxHeal(){
@@ -25,19 +26,16 @@ open class Character(internal val maxHP: Int,private val def: Int, val damage: I
 }
 
 class Hero(
+    id: Int,
     maxHP: Int,
-    private val maxMP: Int,
+    val maxMP: Int,
     def: Int,
     damage: Int,
-    heroDrawable: Drawable?,
-    weaponDrawable: Drawable?):Character(maxHP, def, damage, heroDrawable, weaponDrawable){
+    heroDrawable: Int,
+    weaponDrawable: Int):Character(id,maxHP, def, damage, heroDrawable, weaponDrawable){
 
-    private var MP = maxMP
-    val inventory = CharacterInventory()
-
-    fun getMP():Int {
-        return MP
-    }
+    var MP = maxMP
+    val inventory = HeroInventory(0)
 
     fun heal(){
         HP+=maxHP/5

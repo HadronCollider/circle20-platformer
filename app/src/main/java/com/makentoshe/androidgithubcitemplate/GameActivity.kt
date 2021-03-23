@@ -3,20 +3,27 @@ package com.makentoshe.androidgithubcitemplate
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.View.*
 import androidx.core.content.ContextCompat
+import com.makentoshe.androidgithubcitemplate.Dao.*
 import kotlinx.android.synthetic.main.activity_game.*
-import java.util.*
-import kotlin.collections.ArrayList
-import com.google.gson.Gson
+
+var db: AppDatabase? = null
+var swordDao: SwordDao? = null
+var bowDao: BowDao? = null
+var staffDao: StaffDao? = null
+var characterDao: CharacterDao? = null
+var chestplateDao: ChestplateDao? = null
+var leggingsDao: LeggingsDao? = null
+var helmetDao: HelmetDao? = null
+var bootsDao: BootsDao? = null
+
+val NUMBEROFENEMIES = 2
 
 
 class GameActivity : MyActivity() {
 
     var game = true
-    lateinit var enemies: Array<Character>
     lateinit var enemy: Character
     lateinit var myHero:Hero
     var k = 0
@@ -27,7 +34,18 @@ class GameActivity : MyActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        db = AppDatabase.getAppDataBase(this)
+        swordDao= db?.swordDao()
+        bowDao= db?.bowDao()
+        staffDao= db?.staffDao()
+        characterDao = db?.characterDao()
+        chestplateDao = db?.chestplateDao()
+        leggingsDao = db?.leggingsDao()
+        helmetDao = db?.helmetDao()
+        bootsDao = db?.bootsDao()
+
         exit.setOnClickListener {
+            AppDatabase.destroyDataBase()
             finish()
         }
 
@@ -40,74 +58,85 @@ class GameActivity : MyActivity() {
 
         if (myClass == "warrior") {
             myHero = Hero(
+                0,
                 300,
                 100,
                 5,
                 20,
-                ContextCompat.getDrawable(this, R.drawable.warrior1),
-                ContextCompat.getDrawable(this, R.drawable.ic_sword)
+                R.drawable.warrior1,
+                R.drawable.ic_sword
             )
-            myHero.inventory.carry(Sword(
+            swordDao?.insertSword(Sword(
+                0,
+                -1,
                 "Тупой клинок",
                 1,
                 1,
                 1,
                 3,
-                ContextCompat.getDrawable(this, R.drawable.ic_sword))
-            )
+                R.drawable.ic_sword))
+            swordDao?.getSwordById(0)?.let { myHero.inventory.carry(it) }
         }else if (myClass == "archer"){
             myHero = Hero(
+                0,
                 300,
                 150,
                 3,
                 25,
-                ContextCompat.getDrawable(this, R.drawable.archer),
-                ContextCompat.getDrawable(this, R.drawable.ic_arrow)
+                R.drawable.archer,
+                R.drawable.ic_arrow
             )
             weapon.rotation = 0F
-            myHero.inventory.carry(Bow(
+            bowDao?.insertBow(Bow(
+                0,
+                0,
                 "Самодельный лук",
                 1,
                 1,
                 1,
                 3,
-                ContextCompat.getDrawable(this, R.drawable.ic_arrow))
-            )
+                R.drawable.ic_arrow
+            ))
+            bowDao?.getBowById(0)?.let{myHero.inventory.carry(it)}
         } else {
             myHero = Hero(
+                0,
                 250,
                 250,
                 2,
                 30,
-                ContextCompat.getDrawable(this, R.drawable.wizard),
-                ContextCompat.getDrawable(this, R.drawable.ic_magic)
+                R.drawable.wizard,
+                R.drawable.ic_magic
             )
-            myHero.inventory.carry(Sword(
+            staffDao?.insertStaff(Staff(
+                0,
+                0,
                 "Старый посох",
                 1,
                 1,
                 1,
                 3,
-                ContextCompat.getDrawable(this, R.drawable.ic_magic))
-            )
+                R.drawable.ic_magic
+            ))
+            staffDao?.getStaffById(0)?.let { myHero.inventory.carry(it) }
         }
 
-        hero.setImageDrawable(myHero.heroDrawable)
-        weapon.setImageDrawable(myHero.weaponDrawable)
-        enemy_d.setImageDrawable(enemy.heroDrawable)
-        sliz.setImageDrawable(enemy.weaponDrawable)
+        hero.setImageDrawable(ContextCompat.getDrawable(this, myHero.heroDrawable))
+        weapon.setImageDrawable(ContextCompat.getDrawable(this, myHero.weaponDrawable))
+        enemy_d.setImageDrawable(ContextCompat.getDrawable(this, enemy.heroDrawable))
+        sliz.setImageDrawable(ContextCompat.getDrawable(this, enemy.weaponDrawable))
 
-        myHP.max = myHero.getMaxHP()
-        myHP.progress = myHero.getHP()
-        enemyHP.max = enemy.getMaxHP()
-        enemyHP.progress = enemy.getHP()
-        mana.setText("MP ${myHero.getMP()}")
+        myHP.max = myHero.HP
+        myHP.progress = myHero.HP
+        enemyHP.max = enemy.maxHP
+        enemyHP.progress = enemy.HP
+        mana.setText("MP ${myHero.MP}")
 
         attack.setOnClickListener {
             if(game) {
                 game = false
                 myHero.regenMP()
-                mana.setText("MP: ${myHero.getMP()}")
+                mana.setText("MP: ${myHero.MP}")
                 attackAnim()
             }
         }
@@ -115,27 +144,27 @@ class GameActivity : MyActivity() {
         protect.setOnClickListener {
             if(game){
                 game = false
-                mana.setText("MP: ${myHero.getMP()}")
+                mana.setText("MP: ${myHero.MP}")
                 shieldAnim()
             }
         }
 
         heal.setOnClickListener {
-            if(myHero.getMP() >= 25)
+            if(myHero.MP >= 25)
                 if(game) {
                     game = false
                     myHero.heal()
-                    myHP.progress = myHero.getHP()
+                    myHP.progress = myHero.HP
                     enemyAttackAnim()
-                    mana.setText("MP: ${myHero.getMP()}")
+                    mana.setText("MP: ${myHero.MP}")
                 }
         }
 
         inventory.setOnClickListener {
-            val intent = Intent(this, InventoryActivity::class.java)
-            val str: String = Gson().toJson(myHero.inventory)
-            intent.putExtra("inventory", str)
-            startActivity(intent)
+            if(game) {
+                val intent = Intent(this, InventoryActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -152,15 +181,13 @@ class GameActivity : MyActivity() {
     }
 
     private fun randEnemy() {
-        val i = (0..(enemies.size-1)).random()
-        enemy = enemies[i]
+        val i = (1..NUMBEROFENEMIES).random()
+        enemy = characterDao?.getCharacterById(i) ?: Character(1,100, 1, 10, R.drawable.enemy, R.drawable.ic_sliz)
     }
 
     private fun initEnemies() {
-        val enemies0 = Character(100, 1, 10, ContextCompat.getDrawable(this, R.drawable.enemy), ContextCompat.getDrawable(this, R.drawable.ic_sliz))
-        val enemies1 = Character(150, 3, 15, ContextCompat.getDrawable(this, R.drawable.enemy2), ContextCompat.getDrawable(this, R.drawable.ic_dirt))
-
-        enemies = arrayOf(enemies0, enemies1)
+        characterDao?.insertCharacter(Character(1,100, 1, 10, R.drawable.enemy, R.drawable.ic_sliz))
+        characterDao?.insertCharacter(Character(2,150, 3, 15, R.drawable.enemy2, R.drawable.ic_dirt))
     }
 
     private fun attackAnim(){
@@ -180,9 +207,9 @@ class GameActivity : MyActivity() {
                 }
             }.withEndAction{
                 weapon.visibility = INVISIBLE
-                enemy.getDamage(myHero.damage)
-                enemyHP.progress = enemy.getHP()
-                if (enemy.getHP() <= 0) {
+                enemy.getAttack(myHero.damage)
+                enemyHP.progress = enemy.HP
+                if (enemy.HP <= 0) {
                     killEnemy()
                 } else {
                     shield.animate().apply {
@@ -220,7 +247,7 @@ class GameActivity : MyActivity() {
                 }.withEndAction {
                     game = true
                     enemyAttack()
-                    myHP.progress = myHero.getHP()
+                    myHP.progress = myHero.HP
                     checkDeath()
                 }
             }
@@ -228,7 +255,7 @@ class GameActivity : MyActivity() {
     }
 
     private fun checkDeath() {
-        if (myHero.getHP() <= 0) {
+        if (myHero.HP <= 0) {
             game = false
             sost.text = "You lose \n Kill count: $k"
             sost.setTextColor(Color.RED)
@@ -237,10 +264,10 @@ class GameActivity : MyActivity() {
 
     private fun enemyAttack() {
         if (shield_dur > 0) {
-            myHero.getDamage(enemy.damage - 4)
+            myHero.getAttack(enemy.damage - 4)
             shield_dur-=1
         } else
-            myHero.getDamage(enemy.damage)
+            myHero.getAttack(enemy.damage)
     }
 
     private fun killEnemy() {
@@ -269,12 +296,17 @@ class GameActivity : MyActivity() {
     private fun newEnemy() {
         randEnemy()
         enemy.maxHeal()
-        enemy_d.setImageDrawable(enemy.heroDrawable)
+        enemy_d.setImageDrawable(ContextCompat.getDrawable(this, enemy.heroDrawable))
         enemy_d.visibility = VISIBLE
-        sliz.setImageDrawable(enemy.weaponDrawable)
-        enemyHP.max = enemy.getMaxHP()
-        enemyHP.progress = enemy.getHP()
+        sliz.setImageDrawable(ContextCompat.getDrawable(this, enemy.weaponDrawable))
+        enemyHP.max = enemy.maxHP
+        enemyHP.progress = enemy.HP
         game = true
+    }
+
+    override fun onDestroy() {
+        AppDatabase.destroyDataBase()
+        super.onDestroy()
     }
 }
 

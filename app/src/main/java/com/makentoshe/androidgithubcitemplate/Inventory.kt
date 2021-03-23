@@ -1,47 +1,73 @@
 package com.makentoshe.androidgithubcitemplate
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 interface Inventory {
 
-    val items: List<Item>
+    val id: Int
 
     val capacity: Int
 
-    fun fetch(item: Item): Item?
+    //fun fetch(item: Item): Item?
 
     fun carry(item: Item)
+
+    fun carry(sword: Sword)
+
+    fun carry(bow: Bow)
+
+    fun carry(staff: Staff)
 }
 
-class CharacterInventory(): Inventory {
-
-    override val items = ArrayList<Item>()
-
-    override val capacity: Int = 15
-
-    override fun fetch(item: Item): Item? {
-        return if (items.remove(item)) {
-            return item
-        } else null
-    }
+@Entity
+class HeroInventory(
+    @PrimaryKey(autoGenerate = true)
+    override val id: Int,
+    override val capacity: Int = 15): Inventory {
 
     override fun carry(item: Item) {
-        if(items.size < capacity)
-            items.add(item)
+        item.inventoryId = id
+    }
+
+    override fun carry(sword: Sword) {
+        sword.inventoryId = id
+        swordDao?.insertSword(sword)
+    }
+
+    override fun carry(bow: Bow) {
+        bow.inventoryId = id
+        bowDao?.insertBow(bow)
+    }
+
+    override fun carry(staff: Staff) {
+        staff.inventoryId = id
+        staffDao?.insertStaff(staff)
     }
 }
 
-class ChestInventory(): Inventory {
-    override val items = ArrayList<Item>()
-
-    override val capacity: Int = 10
-
-    override fun fetch(item: Item): Item? {
-        return if (items.remove(item)) {
-            return item
-        } else null
-    }
+@Entity
+class ChestInventory(
+    @PrimaryKey(autoGenerate = true)
+    override val id: Int,
+    override val capacity: Int = 10): Inventory {
 
     override fun carry(item: Item) {
-        if(items.size < capacity)
-            items.add(item)
+        item.inventoryId = id
+    }
+
+    override fun carry(sword: Sword) {
+        sword.inventoryId = id
+        swordDao?.insertSword(sword)
+    }
+
+    override fun carry(bow: Bow) {
+        bow.inventoryId = id
+        bowDao?.insertBow(bow)
+    }
+
+    override fun carry(staff: Staff) {
+        staff.inventoryId = id
+        staffDao?.insertStaff(staff)
     }
 }

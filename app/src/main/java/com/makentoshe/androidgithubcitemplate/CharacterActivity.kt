@@ -14,6 +14,7 @@ class CharacterActivity : MyActivity() {
         }
 
         warrior.setOnClickListener {
+            AppDatabase.destroyDataBase()
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("class", "warrior")
             intent.putExtra("flag", true)
@@ -21,6 +22,7 @@ class CharacterActivity : MyActivity() {
         }
 
         wizard.setOnClickListener {
+            AppDatabase.destroyDataBase()
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("class", "wizard")
             intent.putExtra("flag", false)
@@ -28,6 +30,7 @@ class CharacterActivity : MyActivity() {
         }
 
         archer.setOnClickListener {
+            AppDatabase.destroyDataBase()
             val intent = Intent(this, GameActivity::class.java)
             intent.putExtra("class", "archer")
             intent.putExtra("flag", false)
