@@ -22,7 +22,7 @@ interface Inventory {
 
 @Entity
 class HeroInventory(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     override val id: Int,
     override val capacity: Int = 15): Inventory {
 

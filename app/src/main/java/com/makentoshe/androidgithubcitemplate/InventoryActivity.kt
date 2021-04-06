@@ -21,13 +21,15 @@ class InventoryActivity : MyActivity() {
         i = 0
         images = arrayOf(image0, image1, image2, image3, image4)
 
-        showInventory(swordDao?.getSwordByChestId(0))
-        showInventory(bowDao?.getBowByChestId(0))
-        showInventory(staffDao?.getStaffByChestId(0))
-        showInventory(chestplateDao?.getChestplateByChestId(0))
-        showInventory(leggingsDao?.getLeggingsByChestId(0))
-        showInventory(helmetDao?.getHelmetByChestId(0))
-        showInventory(bootsDao?.getBootsByChestId(0))
+        var k = intent.getIntExtra("id",0)
+
+        showInventory(swordDao?.getSwordByChestId(k))
+        showInventory(bowDao?.getBowByChestId(k))
+        showInventory(staffDao?.getStaffByChestId(k))
+        showInventory(chestplateDao?.getChestplateByChestId(k))
+        showInventory(leggingsDao?.getLeggingsByChestId(k))
+        showInventory(helmetDao?.getHelmetByChestId(k))
+        showInventory(bootsDao?.getBootsByChestId(k))
 
         exit.setOnClickListener {
             finish()

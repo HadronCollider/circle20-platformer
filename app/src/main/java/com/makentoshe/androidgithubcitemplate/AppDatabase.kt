@@ -18,7 +18,7 @@ import com.makentoshe.androidgithubcitemplate.Dao.*
     Leggings::class, //+
     Helmet::class, //+
     Boots::class], //+
-    version = 1)
+    version = 3)
 public abstract class AppDatabase: RoomDatabase() {
     abstract fun swordDao(): SwordDao
     abstract fun bowDao(): BowDao
@@ -39,7 +39,7 @@ public abstract class AppDatabase: RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         "database"
-                    ).allowMainThreadQueries().build()
+                    ).allowMainThreadQueries().fallbackToDestructiveMigration().build()
                 }
             }
             return INSTANCE

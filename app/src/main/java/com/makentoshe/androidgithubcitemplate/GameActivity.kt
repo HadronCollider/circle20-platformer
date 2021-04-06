@@ -25,7 +25,7 @@ class GameActivity : MyActivity() {
 
     var game = true
     lateinit var enemy: Character
-    lateinit var myHero:Hero
+    public lateinit var myHero:Hero
     var k = 0
     var shield_dur = 0
     var flag = false
@@ -68,17 +68,17 @@ class GameActivity : MyActivity() {
             )
             swordDao?.insertSword(Sword(
                 0,
-                -1,
+                0,
                 "Тупой клинок",
                 1,
                 1,
                 1,
                 3,
                 R.drawable.ic_sword))
-            swordDao?.getSwordById(0)?.let { myHero.inventory.carry(it) }
+            //swordDao?.getSwordById(0)?.let { myHero.inventory.carry(it) }
         }else if (myClass == "archer"){
             myHero = Hero(
-                0,
+                1,
                 300,
                 150,
                 3,
@@ -89,7 +89,7 @@ class GameActivity : MyActivity() {
             weapon.rotation = 0F
             bowDao?.insertBow(Bow(
                 0,
-                0,
+                1,
                 "Самодельный лук",
                 1,
                 1,
@@ -97,10 +97,10 @@ class GameActivity : MyActivity() {
                 3,
                 R.drawable.ic_arrow
             ))
-            bowDao?.getBowById(0)?.let{myHero.inventory.carry(it)}
+            //bowDao?.getBowById(0)?.let{myHero.inventory.carry(it)}
         } else {
             myHero = Hero(
-                0,
+                2,
                 250,
                 250,
                 2,
@@ -110,7 +110,7 @@ class GameActivity : MyActivity() {
             )
             staffDao?.insertStaff(Staff(
                 0,
-                0,
+                2,
                 "Старый посох",
                 1,
                 1,
@@ -118,7 +118,7 @@ class GameActivity : MyActivity() {
                 3,
                 R.drawable.ic_magic
             ))
-            staffDao?.getStaffById(0)?.let { myHero.inventory.carry(it) }
+            //staffDao?.getStaffById(0)?.let { myHero.inventory.carry(it) }
         }
 
         hero.setImageDrawable(ContextCompat.getDrawable(this, myHero.heroDrawable))
@@ -163,6 +163,7 @@ class GameActivity : MyActivity() {
         inventory.setOnClickListener {
             if(game) {
                 val intent = Intent(this, InventoryActivity::class.java)
+                intent.putExtra("id", myHero.id)
                 startActivity(intent)
             }
         }
